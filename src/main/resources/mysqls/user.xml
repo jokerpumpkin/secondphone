@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user">
+<!-- 校验手机号唯一性 -->
+<select id="checkPhone" parameterClass="String" resultClass="Integer">
+	select count(*) from customer where phone=#phone# and statusId=1
+</select>
+
+<!-- 校验用户名唯一性 -->
+<select id="checkName" parameterClass="String" resultClass="Integer">
+	select count(*) from customer where name=#name# and statusId=1
+</select>
+
+<!-- 用户注册 -->
+<insert id="register" parameterClass="com.linan.phone.entity.Comsumer">
+	insert 
+	into customer(name,password,phone,photo,pwdQuestion,pwdAnswer,registerTime,statusId)
+	values(#name#,#password#,#phone#,#photo#,#pwdQuestion#,#pwdAnswer#,now(),1)
+	<selectKey resultClass="int" keyProperty="id">
+		<![CDATA[SELECT LAST_INSERT_ID() AS ID ]]>
+	</selectKey>
+</insert>
+
+<!-- 用户登录 -->
+<select id="login" parameterClass="com.linan.phone.entity.Comsumer" resultClass="com.linan.phone.entity.Comsumer">
+	select * from customer where name=#name# and password=#password# and statusId!=0
+</select>
+
+<select id="test" resultClass="java.util.HashMap">
+	select * from traderecord where statusId=1
+</select>
+</sqlMap>
